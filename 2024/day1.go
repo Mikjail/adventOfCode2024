@@ -24,6 +24,11 @@ func main() {
 
 	firstPart(data)
 
+	secondPart(data)
+
+}
+
+func secondPart(data Data) {
 	locationIdMap := map[int]int{}
 
 	for _, num := range data.Array1 {
@@ -49,7 +54,6 @@ func main() {
 	}
 
 	fmt.Printf("%d", total)
-
 }
 
 func firstPart(data Data) {
