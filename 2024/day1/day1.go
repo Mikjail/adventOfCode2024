@@ -13,21 +13,10 @@ type Locations struct {
 	right []int
 }
 
-func FirstPart(data Locations) float64 {
+func FirstPart(locations Locations) int {
+	locations.sortLists()
 
-	sort.Ints(data.left)
-
-	sort.Ints(data.right)
-
-	n := len(data.left)
-
-	total := 0.0
-	for i := 0; i < n; i++ {
-		diff := math.Abs(float64(data.left[i]) - float64(data.right[i]))
-		total += diff
-	}
-
-	return total
+	return locations.getDistance()
 }
 
 func SecondPart(data Locations) int {
@@ -67,14 +56,28 @@ func GetLocations(fileName string) (result Locations, err error) {
 
 	lines := strings.Split(data, "\n")
 
-	left := []int{}
-	right := []int{}
-
 	for i := 0; i < len(lines); i++ {
 		parts := strings.Fields(lines[i])
 		result.left = append(result.left, util.ParseStringToNum(parts[0]))
 		result.right = append(result.right, util.ParseStringToNum(parts[1]))
 	}
 
-	return Locations{left: left, right: right}, nil
+	return
+}
+
+func (locations *Locations) sortLists() {
+	sort.Ints(locations.left)
+
+	sort.Ints(locations.right)
+}
+
+func (locations *Locations) getDistance() (total int) {
+	n := len(locations.left)
+
+	for i := 0; i < n; i++ {
+		diff := math.Abs(float64(locations.left[i]) - float64(locations.right[i]))
+		total += int(diff)
+	}
+
+	return
 }
