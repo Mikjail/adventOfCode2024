@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -59,7 +58,7 @@ func SecondPart(data Locations) int {
 	return total
 }
 
-func GetLocations(fileName string) (Locations, error) {
+func GetLocations(fileName string) (result Locations, err error) {
 	data, err := util.GetData(fileName)
 
 	if err != nil {
@@ -73,16 +72,8 @@ func GetLocations(fileName string) (Locations, error) {
 
 	for i := 0; i < len(lines); i++ {
 		parts := strings.Fields(lines[i])
-		leftVal, err := strconv.Atoi(parts[0])
-		if err != nil {
-			return Locations{}, fmt.Errorf("error parsing left value: %s", err)
-		}
-		left = append(left, leftVal)
-		rightVal, err := strconv.Atoi(parts[1])
-		if err != nil {
-			return Locations{}, fmt.Errorf("error parsing right value: %s", err)
-		}
-		right = append(right, rightVal)
+		result.left = append(result.left, util.ParseStringToNum(parts[0]))
+		result.right = append(result.right, util.ParseStringToNum(parts[1]))
 	}
 
 	return Locations{left: left, right: right}, nil
