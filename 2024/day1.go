@@ -1,44 +1,47 @@
-package main
+package day1
 
 import (
-	"bufio"
+	util "adventOfCode/main/utils"
 	"fmt"
 	"math"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
 )
 
-type Data struct {
-	Array1 []int `json:"array1"`
-	Array2 []int `json:"array2"`
+type Locations struct {
+	left  []int
+	right []int
 }
 
-func main() {
-	data, err := getData("data/day1.txt")
+func FirstPart(data Locations) float64 {
 
-	if err != nil {
-		fmt.Println("Error: ", err)
+	sort.Ints(data.left)
+
+	sort.Ints(data.right)
+
+	n := len(data.left)
+
+	total := 0.0
+	for i := 0; i < n; i++ {
+		diff := math.Abs(float64(data.left[i]) - float64(data.right[i]))
+		total += diff
 	}
 
-	firstPart(data)
-
-	secondPart(data)
-
+	return total
 }
 
-func secondPart(data Data) {
+func SecondPart(data Locations) int {
 	locationIdMap := map[int]int{}
 
-	for _, num := range data.Array1 {
+	for _, num := range data.left {
 		_, exist := locationIdMap[num]
 		if !exist {
 			locationIdMap[num] = 0
 		}
 	}
 
-	for _, num := range data.Array2 {
+	for _, num := range data.right {
 		_, exist := locationIdMap[num]
 		if exist {
 			locationIdMap[num] += 1
@@ -46,66 +49,41 @@ func secondPart(data Data) {
 	}
 
 	total := 0
-	for _, num := range data.Array1 {
+	for _, num := range data.left {
 		nTimes, exist := locationIdMap[num]
 		if exist {
 			total += nTimes * num
 		}
 	}
 
-	fmt.Printf("%d", total)
+	return total
 }
 
-func firstPart(data Data) {
-
-	sort.Ints(data.Array1)
-
-	sort.Ints(data.Array2)
-
-	n := len(data.Array1)
-
-	total := 0.0
-	for i := 0; i < n; i++ {
-		diff := math.Abs(float64(data.Array1[i]) - float64(data.Array2[i]))
-		total += diff
-	}
-
-	fmt.Printf("%f\n", total)
-}
-
-func getData(filename string) (Data, error) {
-	file, err := os.Open(filename)
+func GetLocations(fileName string) (Locations, error) {
+	data, err := util.GetData(fileName)
 
 	if err != nil {
-		fmt.Println("Error:", err)
-		return Data{}, fmt.Errorf("error opening file: %w", err)
+		return Locations{}, fmt.Errorf("error getting the data: %s", err)
 	}
-	defer file.Close()
 
-	var array1, array2 []int
-	scanner := bufio.NewScanner(file)
+	lines := strings.Split(data, "\n")
 
-	for scanner.Scan() {
-		line := scanner.Text()
-		parts := strings.Fields(line)
+	left := []int{}
+	right := []int{}
 
-		if len(parts) != 2 {
-			return Data{}, fmt.Errorf("invalid line format: %s", line)
+	for i := 0; i < len(lines); i++ {
+		parts := strings.Fields(lines[i])
+		leftVal, err := strconv.Atoi(parts[0])
+		if err != nil {
+			return Locations{}, fmt.Errorf("error parsing left value: %s", err)
 		}
-
-		val1, err1 := strconv.Atoi(parts[0])
-		val2, err2 := strconv.Atoi(parts[1])
-		if err1 != nil || err2 != nil {
-			return Data{}, fmt.Errorf("error converting string to int: %s", parts)
+		left = append(left, leftVal)
+		rightVal, err := strconv.Atoi(parts[1])
+		if err != nil {
+			return Locations{}, fmt.Errorf("error parsing right value: %s", err)
 		}
-
-		array1 = append(array1, val1)
-		array2 = append(array2, val2)
+		right = append(right, rightVal)
 	}
 
-	if err := scanner.Err(); err != nil {
-		return Data{}, fmt.Errorf("error reading file: %w", err)
-	}
-
-	return Data{Array1: array1, Array2: array2}, nil
+	return Locations{left: left, right: right}, nil
 }
