@@ -2,7 +2,6 @@ package day1
 
 import (
 	util "adventOfCode/main/utils"
-	"fmt"
 	"math"
 	"sort"
 	"strings"
@@ -48,11 +47,7 @@ func SecondPart(data Locations) int {
 }
 
 func GetLocations(fileName string) (result Locations, err error) {
-	data, err := util.GetData(fileName)
-
-	if err != nil {
-		return Locations{}, fmt.Errorf("error getting the data: %s", err)
-	}
+	data := util.GetData(fileName)
 
 	lines := strings.Split(data, "\n")
 

@@ -1,22 +1,27 @@
-package util
+package utils
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func GetData(fileName string) (string, error) {
-	filePath := fmt.Sprintf("../data/%s.txt", fileName)
+func GetData(fileName string) string {
+	filePath := fmt.Sprintf("../../data/%s.txt", fileName)
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		return "", fmt.Errorf("error reading file: %w", err)
+		panic(fmt.Errorf("error reading file: %w", err))
 	}
-	return string(data), nil
+	return string(data)
 }
 
 func ParseStringToNum(str string) int {
 	num, _ := strconv.Atoi(strings.Trim(str, " "))
 	return num
+}
+
+func GetAbsolute(num1 int, num2 int) int {
+	return int(math.Abs(float64(num1) - float64(num2)))
 }
