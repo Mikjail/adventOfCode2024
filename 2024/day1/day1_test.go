@@ -4,13 +4,13 @@ import (
 	"adventOfCode/main/2024/day1"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"gotest.tools/v3/assert"
 )
 
 func TestPart1(t *testing.T) {
 	data, err := day1.GetLocations("day1")
 
-	assert.NoError(t, err, "Expected no error, but got one")
+	assert.NilError(t, err, "Expected no error, but got one")
 
 	result := day1.FirstPart(data)
 
@@ -21,7 +21,7 @@ func TestPart1(t *testing.T) {
 func TestPart2(t *testing.T) {
 	data, err := day1.GetLocations("day1")
 
-	assert.NoError(t, err, "Expected no error, but got one")
+	assert.NilError(t, err, "Expected no error, but got one")
 
 	result := day1.SecondPart(data)
 

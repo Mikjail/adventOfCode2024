@@ -4,7 +4,7 @@ import (
 	"adventOfCode/main/2024/day2"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"gotest.tools/v3/assert"
 )
 
 func TestPart1(t *testing.T) {
