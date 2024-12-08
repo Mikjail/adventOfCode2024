@@ -8,10 +8,13 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	data := day3.GetComputerInstructions()
-
-	result := day3.Part1(data)
+	result := day3.Part1()
 
 	assert.Equal(t, result, 164730528)
 
+}
+
+func TestPart2(t *testing.T) {
+	result := day3.Part2()
+	assert.Equal(t, result, 70478672)
 }
