@@ -8,13 +8,13 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	result := Part1()
+	result := day4.Part1()
 
-	assert.Equal(t, result, 18)
+	assert.Equal(t, result, 2517)
 }
 
-func Part1() int {
-	words := day4.GetAllLetters()
+func TestPart2(t *testing.T) {
+	result := day4.Part2()
 
-	return day4.SearchWord(words)
+	assert.Equal(t, result, 1960)
 }

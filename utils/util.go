@@ -17,6 +17,11 @@ func GetData(fileName string) string {
 	return string(data)
 }
 
+func GetDataSplittedInLines(fileName string) []string {
+	data := GetData(fileName)
+	return strings.Split(data, "\n")
+}
+
 func ParseStringToNum(str string) int {
 	num, _ := strconv.Atoi(strings.Trim(str, " "))
 	return num
