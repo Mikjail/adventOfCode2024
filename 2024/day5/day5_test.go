@@ -12,3 +12,9 @@ func TestPart1(t *testing.T) {
 
 	assert.DeepEqual(t, result, 5732)
 }
+
+func TestPart2(t *testing.T) {
+	result := day5.Part2()
+
+	assert.DeepEqual(t, result, 123)
+}

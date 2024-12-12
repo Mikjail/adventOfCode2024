@@ -17,6 +17,60 @@ func Part1() int {
 	return getLinesWithRightOrders(rulesMap, newResult[1])
 }
 
+func Part2() int {
+	data := utils.GetData("day5/day5")
+
+	newResult := strings.Split(data, "\n\n")
+
+	rulesMap := getRules(newResult[0])
+
+	lines := getLinesWrongOrders(rulesMap, newResult[1])
+
+	return getSumMiddles(rulesMap, lines)
+}
+
+func getSumMiddles(rulesMap Rules, lines [][]string) (result int) {
+	for _, line := range lines {
+		n := len(line)
+		for i := 0; i < n; i++ {
+			pageDep, exist := rulesMap[line[i]]
+			if exist {
+				if isMiddle(pageDep, line) {
+					result += utils.ParseStringToNum(line[i])
+					break
+				}
+			}
+
+		}
+	}
+	return
+}
+
+func isMiddle(pageDep map[string]struct{}, line []string) bool {
+	position := 0
+	n := len(line)
+	for j := 0; j < n; j++ {
+		_, exist := pageDep[line[j]]
+		if exist {
+			position++
+		}
+	}
+	middleIndex := n / 2
+	return middleIndex == position
+}
+
+func getLinesWrongOrders(rulesMap Rules, data string) (result [][]string) {
+	lines := strings.Split(data, "\n")
+	for _, line := range lines {
+		numbers := strings.Split(line, ",")
+		n := len(numbers)
+		if !isValidOrder(n, rulesMap, numbers) {
+			result = append(result, numbers)
+		}
+	}
+	return
+}
+
 func getLinesWithRightOrders(ruleMap Rules, data string) (totalOfMiddle int) {
 	lines := strings.Split(data, "\n")
 	for _, line := range lines {
