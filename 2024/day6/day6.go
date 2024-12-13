@@ -22,18 +22,11 @@ func Part1() int {
 		"<": {0, -1, "^"},
 	}
 
-	ROWS := len(path)
-	COLS := len(path[0])
-	for i := 0; i < ROWS; i++ {
-		for j := 0; j < COLS; j++ {
-			if path[i][j] == "^" {
-				res, _ := dfs(path, guardDirections, i, j, ROWS, COLS)
-				return res
-			}
-		}
-	}
+	_, initialPosition := getPositions(path)
 
-	return 0
+	res, _ := dfs(path, guardDirections, initialPosition.Row, initialPosition.Col)
+
+	return res
 }
 
 func getPath() [][]string {
@@ -42,36 +35,40 @@ func getPath() [][]string {
 	return path
 }
 
-func dfs(path [][]string, guardDirections GuardDirections, row int, col int, ROWS int, COLS int) (result int, isLoop bool) {
+func dfs(path [][]string, guardDirections GuardDirections, row int, col int) (result int, isLoop bool) {
+	ROWS := len(path)
+	COLS := len(path[0])
 	dir := guardDirections[path[row][col]]
-	result = 1
 	isLoop = false
-	visited := make(map[string]bool) // tracking visited path
+	visitedDirection := make(map[string]bool)
+	visitedStep := make(map[string]bool)
 	for {
 		nextRow := row + dir.RowChange
 		nextCol := col + dir.ColChange
 
-		key := fmt.Sprintf("%d,%d,%s", nextRow, nextCol, dir.NewDirection)
+		Pathkey := fmt.Sprintf("%d,%d,%s", nextRow, nextCol, dir.NewDirection)
+		stepKey := fmt.Sprintf("%d,%d", row, col)
 
-		if visited[key] {
+		if !visitedStep[stepKey] {
+			result++
+		}
+
+		visitedStep[stepKey] = true
+
+		if visitedDirection[Pathkey] {
 			isLoop = true
 			return
 		}
 
-		visited[key] = true
+		visitedDirection[Pathkey] = true
 
 		if nextRow < 0 || nextRow >= ROWS || nextCol < 0 || nextCol >= COLS {
-			result++
 			return
 		}
 
 		if path[nextRow][nextCol] == "#" {
 			dir = guardDirections[dir.NewDirection]
 			continue
-		}
-
-		if path[row][col] == "." {
-			result++
 		}
 
 		row = nextRow
@@ -87,44 +84,38 @@ func Part2() (result int) {
 		"V": {1, 0, "<"},
 		"<": {0, -1, "^"},
 	}
-	ROWS := len(path)
-	COLS := len(path[0])
 
-	obstaclePostitions := getObstaclePositions(path)
+	obstaclePostitions, initialPosition := getPositions(path)
 
 	for _, obstacle := range obstaclePostitions {
-		for i := 0; i < ROWS; i++ {
-			for j := 0; j < COLS; j++ {
-				path[obstacle.Row][obstacle.Col] = "#"
-				if path[i][j] == "^" {
-					_, isLoop := dfs(path, guardDirections, i, j, ROWS, COLS)
-					if isLoop {
-						result++
-					}
-				}
-				path[obstacle.Row][obstacle.Col] = "."
-			}
+		path[obstacle.Row][obstacle.Col] = "#"
+		_, isLoop := dfs(path, guardDirections, initialPosition.Row, initialPosition.Col)
+		if isLoop {
+			result++
 		}
-
+		path[obstacle.Row][obstacle.Col] = "."
 	}
 
 	return result
 }
 
-type ObstaclePositions struct {
+type Position struct {
 	Row int
 	Col int
 }
 
-func getObstaclePositions(path [][]string) (positions []ObstaclePositions) {
+func getPositions(path [][]string) (obstaclePositions []Position, initialPosition Position) {
 	ROWS := len(path)
 	COLS := len(path[0])
 	for i := 0; i < ROWS; i++ {
 		for j := 0; j < COLS; j++ {
 			if path[i][j] == "." {
-				positions = append(positions, ObstaclePositions{i, j})
+				obstaclePositions = append(obstaclePositions, Position{i, j})
+			}
+			if path[i][j] == "^" {
+				initialPosition = Position{i, j}
 			}
 		}
 	}
-	return positions
+	return
 }
