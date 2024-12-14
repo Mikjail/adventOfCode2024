@@ -27,6 +27,17 @@ func ParseStringToNum(str string) int {
 	return num
 }
 
+func CountDigits(n int) (count float64) {
+	if n == 0 {
+		return 1
+	}
+	for n != 0 {
+		n /= 10
+		count++
+	}
+	return
+}
+
 func GetAbsolute(num1 int, num2 int) int {
 	return int(math.Abs(float64(num1) - float64(num2)))
 }

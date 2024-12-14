@@ -10,9 +10,11 @@ import (
 func TestPart1(t *testing.T) {
 	data := day7.Part1()
 
-	assert.Equal(t, data, 3749)
+	assert.Equal(t, data, 2501605301465)
 }
 
 func TestPart2(t *testing.T) {
+	data := day7.Part2()
 
+	assert.Equal(t, data, 44841372855953)
 }

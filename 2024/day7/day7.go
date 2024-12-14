@@ -2,6 +2,7 @@ package day7
 
 import (
 	"adventOfCode/main/utils"
+	"math"
 	"strings"
 )
 
@@ -15,30 +16,47 @@ func Part1() int {
 
 	equations := getEquations(lines)
 
-	return getCombinationResult(equations)
+	return getCombinationResult(equations, false)
 
 }
 
-func getCombinationResult(equations []Equations) (result int) {
+func Part2() int {
+	lines := utils.GetDataSplittedInLines("day7/day7")
+
+	equations := getEquations(lines)
+
+	return getCombinationResult(equations, true)
+}
+
+func getCombinationResult(equations []Equations, withConcatenation bool) (result int) {
 	for _, equation := range equations {
-		if isValidBackTracking(0, 0, equation.Numbers, equation.Target) {
+		if isValidBackTracking(0, 0, equation.Numbers, equation.Target, withConcatenation) {
 			result += equation.Target
 		}
 	}
 	return
 }
 
-func isValidBackTracking(index int, current int, comb []int, target int) bool {
+func isValidBackTracking(index int, current int, comb []int, target int, withConcatenation bool) bool {
+
 	if index == len(comb) {
 		return current == target
 	}
 
-	if isValidBackTracking(index+1, current+comb[index], comb, target) {
+	if isValidBackTracking(index+1, current+comb[index], comb, target, withConcatenation) {
 		return true
 	}
 
-	if isValidBackTracking(index+1, current*comb[index], comb, target) {
+	if isValidBackTracking(index+1, current*comb[index], comb, target, withConcatenation) {
 		return true
+	}
+
+	if withConcatenation {
+		n := utils.CountDigits(comb[index])
+		total := int((math.Pow(10, n) * float64(current)) + float64(comb[index]))
+		if isValidBackTracking(index+1, total, comb, target, withConcatenation) {
+			return true
+		}
 	}
 
 	return false
