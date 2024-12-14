@@ -11,50 +11,61 @@ type Equations struct {
 	Target  int
 }
 
+type OperationsMap map[string]bool
+
 func Part1() int {
+	operationMap := OperationsMap{
+		"+": true,
+		"*": true,
+	}
 	lines := utils.GetDataSplittedInLines("day7/day7")
 
 	equations := getEquations(lines)
 
-	return getCombinationResult(equations, false)
+	return getCombinationResult(equations, operationMap)
 
 }
 
 func Part2() int {
+	operationMap := OperationsMap{
+		"+":  true,
+		"*":  true,
+		"||": true,
+	}
 	lines := utils.GetDataSplittedInLines("day7/day7")
 
 	equations := getEquations(lines)
 
-	return getCombinationResult(equations, true)
+	return getCombinationResult(equations, operationMap)
 }
 
-func getCombinationResult(equations []Equations, withConcatenation bool) (result int) {
+func getCombinationResult(equations []Equations, operationsMap OperationsMap) (result int) {
 	for _, equation := range equations {
-		if isValidBackTracking(0, 0, equation.Numbers, equation.Target, withConcatenation) {
+		if isValidBackTracking(0, 0, equation.Numbers, equation.Target, operationsMap) {
 			result += equation.Target
 		}
 	}
 	return
 }
 
-func isValidBackTracking(index int, current int, comb []int, target int, withConcatenation bool) bool {
+func isValidBackTracking(index int, current int, comb []int, target int, operationsMap OperationsMap) bool {
 
 	if index == len(comb) {
 		return current == target
 	}
 
-	if isValidBackTracking(index+1, current+comb[index], comb, target, withConcatenation) {
+	if operationsMap["+"] && isValidBackTracking(index+1, current+comb[index], comb, target, operationsMap) {
 		return true
 	}
 
-	if isValidBackTracking(index+1, current*comb[index], comb, target, withConcatenation) {
+	if operationsMap["*"] && isValidBackTracking(index+1, current*comb[index], comb, target, operationsMap) {
 		return true
 	}
 
-	if withConcatenation {
+	if operationsMap["||"] {
 		n := utils.CountDigits(comb[index])
 		total := int((math.Pow(10, n) * float64(current)) + float64(comb[index]))
-		if isValidBackTracking(index+1, total, comb, target, withConcatenation) {
+		if isValidBackTracking(index+1, total, comb, target, operationsMap) {
 			return true
 		}
 	}
