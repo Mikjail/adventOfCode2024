@@ -46,10 +46,8 @@ func SecondPart(data Locations) int {
 	return total
 }
 
-func GetLocations(fileName string) (result Locations, err error) {
-	data := util.GetData(fileName)
-
-	lines := strings.Split(data, "\n")
+func GetLocations() (result Locations, err error) {
+	lines := util.GetDataSplittedInLines("day1/day1")
 
 	for i := 0; i < len(lines); i++ {
 		parts := strings.Fields(lines[i])

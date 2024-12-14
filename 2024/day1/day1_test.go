@@ -8,7 +8,7 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	data, err := day1.GetLocations("day1")
+	data, err := day1.GetLocations()
 
 	assert.NilError(t, err, "Expected no error, but got one")
 
@@ -19,7 +19,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	data, err := day1.GetLocations("day1")
+	data, err := day1.GetLocations()
 
 	assert.NilError(t, err, "Expected no error, but got one")
 
