@@ -2,22 +2,19 @@ package day8_test
 
 import (
 	"adventOfCode/main/2024/day8"
-	"adventOfCode/main/utils"
 	"testing"
 
 	"gotest.tools/v3/assert"
 )
 
 func TestPart1(t *testing.T) {
-	result := Part1()
+	result := day8.Part1()
 
-	assert.Equal(t, result, 14)
+	assert.Equal(t, result, 332)
 }
 
-func Part1() int {
-	lines := utils.GetDataSplittedInLines("day8/day8")
+func TestPart2(t *testing.T) {
+	result := day8.Part2()
 
-	gridMap := day8.GetAntennaAltPositions(lines)
-
-	return day8.GetNumberOfAntinodes(gridMap, lines)
+	assert.Equal(t, result, 1174)
 }
