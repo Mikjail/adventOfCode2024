@@ -12,3 +12,9 @@ func TestPart1(t *testing.T) {
 
 	assert.Equal(t, data, 6341711060162)
 }
+
+func TestPart2(t *testing.T) {
+	data := day9.Part2()
+
+	assert.Equal(t, data, 6377400869326)
+}
