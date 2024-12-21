@@ -27,6 +27,10 @@ func ParseStringToNum(str string) int {
 	return num
 }
 
+func ParseStringToArr(str string) []string {
+	return strings.Split(str, " ")
+}
+
 func CountDigits(n int) (count float64) {
 	if n == 0 {
 		return 1
