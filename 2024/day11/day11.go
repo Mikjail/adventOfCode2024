@@ -3,34 +3,47 @@ package day11
 import (
 	"adventOfCode/main/utils"
 	"fmt"
+	"strings"
 )
 
-func Part1() int {
+type StonesMap map[string]int
+
+func Part1(n int) int {
 	data := utils.GetData("day11/day11")
 	arr := utils.ParseStringToArr(data)
 
-	count := blinkTimes(25, arr)
+	count := blinkTimes(n, arr)
 
 	return count
 
 }
 
 func blinkTimes(blinktingTimes int, arr []string) int {
-	for i := 0; i < blinktingTimes; i++ {
-		stones := []string{}
-		for _, stone := range arr {
-			modifiedStone := modifyStone(stone)
-			stones = append(stones, modifiedStone...)
-		}
-		arr = stones
+	stoneNumberMap := make(StonesMap)
+	for _, char := range arr {
+		stoneNumberMap[char] += 1
 	}
 
-	return len(arr)
+	for i := 0; i < blinktingTimes; i++ {
+		newStones := make(StonesMap)
+		for key := range stoneNumberMap {
+			modifyStone(key, newStones, stoneNumberMap)
+		}
+		stoneNumberMap = newStones
+	}
+
+	result := 0
+	for _, val := range stoneNumberMap {
+		result += val
+	}
+
+	return result
 }
 
-func modifyStone(stone string) []string {
+func modifyStone(stone string, newStones StonesMap, memoStones StonesMap) {
 	if stone == "0" {
-		return []string{"1"}
+		newStones["1"] += memoStones[stone]
+		return
 	}
 	//even digits: split into two
 	if len(stone)%2 == 0 {
@@ -38,29 +51,17 @@ func modifyStone(stone string) []string {
 		firstHalf := stone[:middle]
 		secondHalf := stone[middle:]
 		//if the lead are 0, then split into only one 0 on the right
-		countLeading0 := countLeadingZeroes(secondHalf)
-		secondHalf = secondHalf[countLeading0:]
+		secondHalf = strings.TrimLeft(secondHalf, "0")
 		if secondHalf == "" {
 			secondHalf = "0"
 		}
-		return []string{firstHalf, secondHalf}
+		newStones[firstHalf] += memoStones[stone]
+		newStones[secondHalf] += memoStones[stone]
+		return
 	}
 	// if previous doesnt happen then we multiply by 2024
 	number := utils.ParseStringToNum(stone)
 	number *= 2024
-	return []string{fmt.Sprint(number)}
-}
-
-func countLeadingZeroes(secondHalf string) (countLeading0 int) {
-	n := len(secondHalf)
-	if n > 1 && secondHalf[0] == '0' {
-
-		for j := 0; j < n; j++ {
-			if secondHalf[j] != '0' {
-				break
-			}
-			countLeading0++
-		}
-	}
-	return countLeading0
+	newStones[fmt.Sprint(number)] += memoStones[stone]
+	return
 }
