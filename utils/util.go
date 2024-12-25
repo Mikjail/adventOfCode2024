@@ -46,7 +46,7 @@ func GetAbsolute(num1 int, num2 int) int {
 	return int(math.Abs(float64(num1) - float64(num2)))
 }
 
-func SplitStringIntoArray(data []string) (result [][]string) {
+func ParseArrayStringIntoMatrix(data []string) (result [][]string) {
 
 	for _, val := range data {
 		result = append(result, strings.Split(val, ""))

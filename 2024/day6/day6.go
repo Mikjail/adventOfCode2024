@@ -31,7 +31,7 @@ func Part1() int {
 
 func getPath() [][]string {
 	data := utils.GetDataSplittedInLines("day6/day6")
-	path := utils.SplitStringIntoArray(data)
+	path := utils.ParseArrayStringIntoMatrix(data)
 	return path
 }
 

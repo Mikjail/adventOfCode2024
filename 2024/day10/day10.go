@@ -7,7 +7,7 @@ import (
 
 func Part1() int {
 	lines := utils.GetDataSplittedInLines("day10/day10")
-	arr := utils.SplitStringIntoArray(lines)
+	arr := utils.ParseArrayStringIntoMatrix(lines)
 	ROWS := len(arr)
 	COLS := len(arr[0])
 	count := 0
@@ -25,7 +25,7 @@ func Part1() int {
 
 func Part2() int {
 	lines := utils.GetDataSplittedInLines("day10/day10")
-	arr := utils.SplitStringIntoArray(lines)
+	arr := utils.ParseArrayStringIntoMatrix(lines)
 
 	ROWS := len(arr)
 	COLS := len(arr[0])
