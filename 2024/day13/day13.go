@@ -37,6 +37,42 @@ func Part1() int {
 	return result
 }
 
+func Part2() int {
+	lines := utils.GetDataSplittedInLines("day13/day13")
+	games := getGames(lines)
+	result := 0
+
+	for _, game := range games {
+		isValid, buttonPressed := findButtonPresses(game)
+		if isValid {
+			result += buttonPressed
+		}
+	}
+
+	return result
+}
+
+func findButtonPresses(game Game) (bool, int) {
+	game.Target.X += 10000000000000
+	game.Target.Y += 10000000000000
+	output := 0
+	det := (game.ButtonA.X * game.ButtonB.Y) - (game.ButtonA.Y * game.ButtonB.X)
+
+	if det == 0 {
+		return false, 0
+	}
+
+	aPress := ((game.Target.X * game.ButtonB.Y) - (game.Target.Y * game.ButtonB.X)) / det
+	bPress := ((game.Target.Y * game.ButtonA.X) - (game.Target.X * game.ButtonA.Y)) / det
+
+	if ((game.ButtonA.X*aPress)+(game.ButtonB.X*bPress)) == game.Target.X && ((game.ButtonA.Y*aPress)+(game.ButtonB.Y*bPress)) == game.Target.Y && aPress >= 0 && bPress >= 0 {
+		cost := aPress*3 + bPress
+		output += cost
+	}
+
+	return true, output
+}
+
 func countTokens(countedButtons CountedButtons) int {
 	return (countedButtons.CountA * 3) + (countedButtons.CountB * 1)
 }
