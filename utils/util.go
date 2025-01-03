@@ -17,6 +17,26 @@ func GetData(fileName string) string {
 	return string(data)
 }
 
+func PrintGridInFile(grid [][]string, stepNumber int) {
+	file, err := os.OpenFile("grid_output.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+	fmt.Fprintf(file, "stepNumber %d\n", stepNumber)
+	for _, row := range grid {
+		for _, col := range row {
+			if col == "" {
+				fmt.Fprint(file, " ")
+			} else {
+				fmt.Fprint(file, col)
+			}
+		}
+		fmt.Fprintln(file)
+	}
+}
+
 func GetDataSplittedInLines(fileName string) []string {
 	data := GetData(fileName)
 	return strings.Split(data, "\n")

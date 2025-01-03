@@ -2,6 +2,7 @@ package day14
 
 import (
 	"adventOfCode/main/utils"
+	"fmt"
 	"strings"
 )
 
@@ -41,8 +42,69 @@ func Part1() int {
 	return result
 }
 
+func Part2() {
+	lines := utils.GetDataSplittedInLines("day14/day14")
+
+	robots := getRobots(lines)
+
+	boundaries := Boundaries{COLS: 101, ROWS: 103}
+	countStep := 1
+	visitedSteps := make(map[string]bool)
+	for {
+		visited, grid := getGrid(robots, boundaries, &visitedSteps)
+		if visited {
+			break
+		}
+		utils.PrintGridInFile(grid, countStep)
+		countStep++
+	}
+
+	fmt.Print("FINISHED")
+}
+
 func getFactor(quadrants *Quadrants) int {
 	return quadrants.TopLeft * quadrants.TopRight * quadrants.BottomRight * quadrants.BottomLeft
+}
+
+func getGrid(robots []Robot, boundaries Boundaries, visitedSteps *map[string]bool) (bool, [][]string) {
+	// reset grid
+	grid := make([][]string, boundaries.ROWS)
+	for i := range grid {
+		grid[i] = make([]string, boundaries.COLS)
+	}
+	currentStep := ""
+	for j := range robots {
+		robot := &robots[j]
+		totalStepsCol := robot.Position.Col + robot.Steps.Col
+		if totalStepsCol > 0 {
+			robot.Position.Col = totalStepsCol % boundaries.COLS
+		} else {
+			robot.Position.Col = totalStepsCol % boundaries.COLS
+			if robot.Position.Col < 0 {
+				robot.Position.Col += boundaries.COLS
+			}
+		}
+
+		totalStepsRow := robot.Position.Row + robot.Steps.Row
+		if totalStepsRow > 0 {
+			robot.Position.Row = totalStepsRow % boundaries.ROWS
+		} else {
+			robot.Position.Row = totalStepsRow % boundaries.ROWS
+			if robot.Position.Row < 0 {
+				robot.Position.Row += boundaries.ROWS
+			}
+		}
+		positionKey := fmt.Sprintf("%d,%d", robot.Position.Row, robot.Position.Col)
+		currentStep += positionKey + ";"
+		grid[robot.Position.Row][robot.Position.Col] = "1"
+
+	}
+	if (*visitedSteps)[currentStep] {
+		return true, nil
+	}
+	(*visitedSteps)[currentStep] = true
+
+	return false, grid
 }
 
 func getQuadrants(robots []Robot, boundaries Boundaries) *Quadrants {
